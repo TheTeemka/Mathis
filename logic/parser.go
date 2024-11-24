@@ -10,7 +10,7 @@ type Parser struct {
 
 func NewParser(text string) *Parser {
 	return &Parser{
-		lexer: newLexer(text),
+		lexer: NewLexer(text),
 	}
 }
 
@@ -21,7 +21,7 @@ func (p *Parser) Parse() *Node {
 func (p *Parser) expr() *Node {
 	node := p.term()
 	for kind, x := p.nextToken(); kind == C_Plus || kind == C_Minus; kind, x = p.nextToken() {
-		tmp := NewNode(kind, x)
+		tmp := newNode(kind, x)
 		p.consumeToken()
 		tmp.Left = node
 		node = tmp
@@ -32,7 +32,7 @@ func (p *Parser) expr() *Node {
 func (p *Parser) term() *Node {
 	node := p.factor()
 	for kind, x := p.nextToken(); kind == C_Divide || kind == C_Multiply; kind, x = p.nextToken() {
-		tmp := NewNode(kind, x)
+		tmp := newNode(kind, x)
 		p.consumeToken()
 		tmp.Left = node
 		node = tmp
@@ -47,10 +47,10 @@ func (p *Parser) factor() *Node {
 	case C_Minus, C_Plus:
 		p.consumeToken()
 		factor := p.factor()
-		return UnaryNode(kind, factor)
+		return unaryNode(kind, factor)
 	case C_Num:
 		p.consumeToken()
-		return NewNode(kind, x)
+		return newNode(kind, x)
 	case C_LeftBracket:
 		p.consumeToken()
 		expr := p.expr()

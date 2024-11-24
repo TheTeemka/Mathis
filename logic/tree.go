@@ -9,19 +9,19 @@ type Node struct {
 	Right *Node
 }
 
-func NewNode(op TokenType, value ExpType) *Node {
+func newNode(op TokenType, value ExpType) *Node {
 	return &Node{
 		Op:    op,
 		Value: value,
 	}
 }
 
-func UnaryNode(op TokenType, node *Node) *Node {
+func unaryNode(op TokenType, node *Node) *Node {
 	if op == C_Plus {
 		return node
 	}
-	temp := NewNode(op, 0)
-	temp.Left = NewNode(C_Num, 0)
+	temp := newNode(op, 0)
+	temp.Left = newNode(C_Num, 0)
 	temp.Right = node
 	return temp
 }

@@ -1,6 +1,9 @@
 package logic
 
-import "strings"
+import (
+	"strings"
+	"unicode"
+)
 
 type TokenType int16
 
@@ -21,16 +24,12 @@ type lexer struct {
 	cursor int
 }
 
-func newLexer(text string) *lexer {
+func NewLexer(text string) *lexer {
 	text = strings.ReplaceAll(text, " ", "")
 	return &lexer{
 		text: []byte(text),
 	}
 }
-func isDigit(b byte) bool {
-	return '0' <= b && b <= '9'
-}
-
 func (r *lexer) nextToken() (TokenType, ExpType) {
 	cur := r.cursor
 	if len(r.text) == cur {
@@ -38,9 +37,9 @@ func (r *lexer) nextToken() (TokenType, ExpType) {
 	}
 	b := r.text[cur]
 	cur++
-	if isDigit(b) {
+	if unicode.IsDigit(rune(b)) {
 		x := ExpType(b - '0')
-		for len(r.text) != cur && isDigit(r.text[cur]) {
+		for len(r.text) != cur && unicode.IsDigit(rune(r.text[cur])) {
 			x = x*10 + ExpType(r.text[cur]-'0')
 			cur++
 		}
@@ -70,9 +69,9 @@ func (r *lexer) consumeToken() {
 	}
 	b := r.text[cur]
 	cur++
-	if isDigit(b) {
+	if unicode.IsDigit(rune(b)) {
 		x := ExpType(b - '0')
-		for len(r.text) != cur && isDigit(r.text[cur]) {
+		for len(r.text) != cur && unicode.IsDigit(rune(r.text[cur])) {
 			x = x*10 + ExpType(r.text[cur]-'0')
 			cur++
 		}
