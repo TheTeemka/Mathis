@@ -18,7 +18,7 @@ func (p *Parser) Parse() *Node {
 	return p.expr()
 }
 
-func (p *Parser) expr() *Node {
+func (p *Parser) expr() *Node { // +, -
 	node := p.term()
 	for kind, x := p.nextToken(); kind == C_Plus || kind == C_Minus; kind, x = p.nextToken() {
 		tmp := newNode(kind, x)
@@ -29,7 +29,7 @@ func (p *Parser) expr() *Node {
 	}
 	return node
 }
-func (p *Parser) term() *Node {
+func (p *Parser) term() *Node { // *, /
 	node := p.factor()
 	for kind, x := p.nextToken(); kind == C_Divide || kind == C_Multiply; kind, x = p.nextToken() {
 		tmp := newNode(kind, x)
@@ -44,7 +44,7 @@ func (p *Parser) factor() *Node {
 	kind, x := p.nextToken()
 
 	switch kind {
-	case C_Minus, C_Plus:
+	case C_Minus, C_Plus: //unary, or numbers
 		p.consumeToken()
 		factor := p.factor()
 		return unaryNode(kind, factor)
@@ -56,12 +56,12 @@ func (p *Parser) factor() *Node {
 		expr := p.expr()
 		kind, _ = p.nextToken()
 		if kind != C_RightBracket {
-			fmt.Printf("Expected Right Bracket")
+			fmt.Printf("Error: Expected Right Bracket\n")
 		}
 		p.consumeToken()
 		return expr
 	default:
-		fmt.Printf("Wanted a Number or LeftBracket")
+		fmt.Printf("Error: Wanted a Number or LeftBracket\n")
 	}
 	return nil
 }
